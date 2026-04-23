@@ -268,8 +268,7 @@ with st.status("**Step 4｜グラフPNG生成中...**",expanded=True) as status:
         graphs=make_graphs(ranking,video_title,n_size); status.update(label=f"**Step 4｜完了** — {len(graphs)}枚",state="complete")
     except Exception as e: graphs={}; status.update(label=f"Step 4｜エラー: {e}",state="error")
 
-save_to_spreadsheet({"date"
-    save_to_history({"date":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),"theme_key":theme_key,"title":video_title,"genre":genre,"keyword":keyword,"target":target,"video_fmt":video_fmt,"ranking":ranking,"script":script_text,"title_ideas":title_ideas})
+save_to_spreadsheet({"date":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),"theme_key":theme_key,"title":video_title,"genre":genre,"keyword":keyword,"target":target,"video_fmt":video_fmt,"ranking":ranking,"script":script_text,"title_ideas":title_ideas})
 
 st.divider()
 st.subheader(f"📌 {video_title}")

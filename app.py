@@ -25,6 +25,33 @@ def load_history():
             with open(HISTORY_FILE,"r",encoding="utf-8") as f: return json.load(f)
         except: return []
     return []
+
+def save_to_spreadsheet(record):
+    try:
+        creds = Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
+            scopes=["https://spreadsheets.google.com/feeds","https://www.googleapis.com/auth/drive"]
+        )
+        gc = gspread.authorize(creds)
+        sh = gc.open_by_key(st.secrets["SPREADSHEET_ID"])
+        ws = sh.sheet1
+        ranking_top = record.get("ranking", [])
+        top1 = ranking_top[0]["label"] + "(" + str(ranking_top[0]["pct"]) + "%)" if ranking_top else ""
+        top2 = ranking_top[1]["label"] + "(" + str(ranking_top[1]["pct"]) + "%)" if len(ranking_top)>1 else ""
+        top3 = ranking_top[2]["label"] + "(" + str(ranking_top[2]["pct"]) + "%)" if len(ranking_top)>2 else ""
+        ws.append_row([
+            record.get("date",""),
+            record.get("title",""),
+            record.get("genre",""),
+            record.get("keyword",""),
+            record.get("target",""),
+            record.get("video_fmt",""),
+            top1, top2, top3,
+            record.get("script","")[:500]
+        ])
+    except Exception as e:
+        st.warning(f"スプレッドシートへの保存に失敗しました: {e}")
+
 def save_to_history(r):
     h=load_history(); h.insert(0,r); h=h[:50]
     with open(HISTORY_FILE,"w",encoding="utf-8") as f: json.dump(h,f,ensure_ascii=False,indent=2)
@@ -241,7 +268,8 @@ with st.status("**Step 4｜グラフPNG生成中...**",expanded=True) as status:
         graphs=make_graphs(ranking,video_title,n_size); status.update(label=f"**Step 4｜完了** — {len(graphs)}枚",state="complete")
     except Exception as e: graphs={}; status.update(label=f"Step 4｜エラー: {e}",state="error")
 
-save_to_history({"date":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),"theme_key":theme_key,"title":video_title,"genre":genre,"keyword":keyword,"target":target,"video_fmt":video_fmt,"ranking":ranking,"script":script_text,"title_ideas":title_ideas})
+save_to_spreadsheet({"date"
+    save_to_history({"date":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),"theme_key":theme_key,"title":video_title,"genre":genre,"keyword":keyword,"target":target,"video_fmt":video_fmt,"ranking":ranking,"script":script_text,"title_ideas":title_ideas})
 
 st.divider()
 st.subheader(f"📌 {video_title}")

@@ -10,7 +10,7 @@ import streamlit as st
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import japanize_matplotlib
+
 from anthropic import Anthropic
 
 # ────────────────────────────────────────────

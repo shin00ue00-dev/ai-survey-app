@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 from anthropic import Anthropic
 
-FONT_PATH="/workspaces/ai-survey-app/NotoSansJP.ttf"
+FONT_PATH="/mount/src/ai-survey-app/NotoSansJP.ttf"
 if os.path.exists(FONT_PATH):
     fm.fontManager.addfont(FONT_PATH)
     JP_FONT=fm.FontProperties(fname=FONT_PATH).get_name()

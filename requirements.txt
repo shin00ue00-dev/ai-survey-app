@@ -1,0 +1,5 @@
+streamlit>=1.35
+anthropic>=0.25
+matplotlib>=3.8
+japanize-matplotlib>=1.1
+numpy>=1.26
